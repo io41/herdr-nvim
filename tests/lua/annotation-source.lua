@@ -1,3 +1,6 @@
+local has_diffview = pcall(require, "diffview.lib")
+check(not has_diffview, "this test must run without Diffview installed on runtimepath")
+
 local H = require("herdr-nvim")
 local A = require("herdr-nvim.annotations")
 H.config.notify = false
@@ -11,6 +14,7 @@ H.annotate({ line1 = 2, line2 = 3 })
 local item = A.list()[1]
 check(item.file == vim.api.nvim_buf_get_name(0), "normal annotation lost its file")
 check(item.diff == nil and item.row == 1 and item.end_row == 2, "normal annotation changed")
+check(package.loaded["diffview.lib"] == nil, "normal annotation loaded Diffview")
 A.clear()
 
 for _, buftype in ipairs({ "nofile", "nowrite", "prompt" }) do
